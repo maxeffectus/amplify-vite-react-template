@@ -13,7 +13,7 @@ const userIcon = new L.Icon({
 });
 
 const objectIcon = new L.Icon({
-  iconUrl: '/bike-icon.png',
+  iconUrl: '/bike-icon.svg',
   iconSize: [30, 30],
   iconAnchor: [15, 41],
   popupAnchor: [1, -34],
