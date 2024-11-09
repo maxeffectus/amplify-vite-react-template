@@ -6,7 +6,6 @@ function App() {
   return (
       <main>
           <div>
-              <h1>Map of Objects</h1>
               <MapComponent/>
           </div>
       </main>
