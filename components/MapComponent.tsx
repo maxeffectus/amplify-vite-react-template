@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './MapComponent.css';
-import L from 'leaflet';
+import L, { LatLngExpression } from 'leaflet';
 
-// Create a blue icon for the user's current location
 const userIcon = new L.Icon({
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
   iconSize: [25, 41],
@@ -13,26 +12,29 @@ const userIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-// Create a yellow icon for objects
 const objectIcon = new L.Icon({
-  iconUrl: '/bike-icon.svg', // Yellow icon
+  iconUrl: '/bike-icon.png',
   iconSize: [30, 30],
   iconAnchor: [15, 41],
   popupAnchor: [1, -34],
 });
 
-const MapComponent = () => {
-  const [userLocation, setUserLocation] = useState(null);
+interface ObjectData {
+  id: number;
+  position: LatLngExpression;
+  name: string;
+}
 
-  // Define three objects with their coordinates
-  const objects = [
+const MapComponent: React.FC = () => {
+  const [userLocation, setUserLocation] = useState<LatLngExpression | null>(null);
+
+  const objects: ObjectData[] = [
     { id: 1, position: [44.810, 20.463], name: "1" },
     { id: 2, position: [44.815, 20.470], name: "2" },
     { id: 3, position: [44.820, 20.450], name: "8" },
   ];
 
   useEffect(() => {
-    // Get the user's current coordinates
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -46,20 +48,16 @@ const MapComponent = () => {
   }, []);
 
   return (
-    <MapContainer center={[44.787197, 20.457273]} zoom={13} className="map-container">
+    <MapContainer center={[44.815, 20.463]} zoom={13} style={{ height: "100vh", width: "100%" }}>
       <TileLayer
-        url="https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
-
-      {/* Display the user's location if available */}
       {userLocation && (
         <Marker position={userLocation} icon={userIcon}>
           <Popup>You are here</Popup>
         </Marker>
       )}
-
-      {/* Display yellow markers for objects */}
       {objects.map((obj) => (
         <Marker key={obj.id} position={obj.position} icon={objectIcon}>
           <Popup>{obj.name}</Popup>
