@@ -16,7 +16,7 @@ const userIcon = new L.Icon({
 
 // Create a yellow icon for objects
 const objectIcon = new L.Icon({
-  iconUrl: '/bike-icon.png', // Yellow icon
+  iconUrl: '/bike-icon.svg', // Yellow icon
   iconSize: [30, 30],
   iconAnchor: [15, 41],
   popupAnchor: [1, -34],
