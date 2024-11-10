@@ -119,8 +119,8 @@ html, body, #root {
   background-color: #d3d3d3;
   color: #000;
   margin-top: 10px;
-  width: calc(100% - 40px); /* Устанавливаем ширину кнопки, чтобы совпадала с текстом */
-  max-width: 360px;
+  /*width: calc(100% - 40px); !* Устанавливаем ширину кнопки, чтобы совпадала с текстом *!*/
+  /*max-width: 360px;*/
   border: none;
   border-radius: 8px;
   padding: 12px;
@@ -130,7 +130,7 @@ html, body, #root {
 }
 
 .got-it-button {
-  width: calc(100% - 40px);
+  /*width: calc(100% - 40px);*/
   background-color: #d3d3d3;
   color: #000;
   border: none;
@@ -238,8 +238,8 @@ html, body, #root {
 .reserve-button,
 .rent-button,
 .got-it-button {
-  width: calc(100% - 40px); /* Устанавливаем ширину кнопки, чтобы совпадала с текстом */
-  max-width: 360px;
+  /*width: calc(100% - 40px); !* Устанавливаем ширину кнопки, чтобы совпадала с текстом *!*/
+  /*max-width: 360px;*/
   background-color: #FFD700;
   color: #000;
   border: none;
@@ -297,8 +297,8 @@ html, body, #root {
 
 .scan-qr-button,
 .cancel-button {
-  width: calc(100% - 40px); /* Устанавливаем ширину кнопки, чтобы совпадала с текстом */
-  max-width: 360px;
+  /*width: calc(100% - 40px); !* Устанавливаем ширину кнопки, чтобы совпадала с текстом *!*/
+  /*max-width: 360px;*/
   padding: 12px;
   font-size: 18px;
   font-weight: bold;
@@ -444,8 +444,8 @@ html, body, #root {
 }
 
 .rent-button {
-  width: calc(100% - 40px); /* Устанавливаем ширину кнопки, чтобы совпадала с текстом */
-  max-width: 360px;
+  /*width: calc(100% - 40px); !* Устанавливаем ширину кнопки, чтобы совпадала с текстом *!*/
+  /*max-width: 360px;*/
   background-color: #FFD700;
   color: #000;
   border: none;
@@ -458,8 +458,8 @@ html, body, #root {
 }
 
 .cancel-button {
-  width: calc(100% - 40px); /* Устанавливаем ширину кнопки, чтобы совпадала с текстом */
-  max-width: 360px;
+  /*width: calc(100% - 40px); !* Устанавливаем ширину кнопки, чтобы совпадала с текстом *!*/
+  /*max-width: 360px;*/
   background-color: #ccc;
   color: #000;
   border: none;
@@ -518,8 +518,8 @@ html, body, #root {
 }
 
 .reserve-button, .rent-button, .cancel-button {
-  width: calc(100% - 40px); /* Устанавливаем ширину кнопки, чтобы совпадала с текстом */
-  max-width: 360px;
+  /*width: calc(100% - 40px); !* Устанавливаем ширину кнопки, чтобы совпадала с текстом *!*/
+  /*max-width: 360px;*/
   padding: 12px;
   border-radius: 8px;
   font-size: 16px;
@@ -623,8 +623,8 @@ html, body, #root {
 }
 
 .reserve-button, .rent-button, .cancel-button {
-  width: calc(100% - 40px); /* Устанавливаем ширину кнопки, чтобы совпадала с текстом */
-  max-width: 360px;
+  /*width: calc(100% - 40px);*/
+  /* Устанавливаем ширину кнопки, чтобы совпадала с текстом */
   padding: 12px;
   border-radius: 8px;
   font-size: 16px;

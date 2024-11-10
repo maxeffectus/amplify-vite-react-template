@@ -179,7 +179,7 @@ const MapComponent: React.FC = () => {
                 // Таймер и кнопка Rent
                 <>
                   <h3>Booked for {formatTime(timeLeft)}</h3>
-                  <button className="rent-button" onClick={handleRentClick}>Rent</button>
+                  <button className="rent-button" onClick={handleRentClick}>Scan QR</button>
                   <button className="cancel-button" onClick={handleCancel}>Cancel</button>
                 </>
               )}
@@ -201,24 +201,25 @@ const MapComponent: React.FC = () => {
 
       {/* Информация о тарифах */}
       {isRateInfoVisible && (
-        <div className="rate-dialog">
-          <h3>Select Rate</h3>
-          <div className="rate-options">
-            <div className="rate-option selected">
-              <span>Pay per minute</span>
-              <span>$0.05 ≈ 0.0097 TON</span>
+          <div className="rate-dialog">
+            <h3>Select Rate</h3>
+            <div className="rate-options">
+              <div className="rate-option selected">
+                <span>Pay per minute</span>
+                <span>$0.05 ≈ 0.0097 TON</span>
+              </div>
+              <div className="rate-option">
+                <span>Pay per hour</span>
+                <span>$1.00 ≈ 0.1951 TON</span>
+              </div>
+              <div className="rate-option">
+                <span>Pay per day</span>
+                <span>$10 ≈ 1.9515 TON</span>
+              </div>
             </div>
-            <div className="rate-option">
-              <span>Pay per hour</span>
-              <span>$1.00 ≈ 0.1951 TON</span>
-            </div>
-            <div className="rate-option">
-              <span>Pay per day</span>
-              <span>$10 ≈ 1.9515 TON</span>
-            </div>
+            <button className="rent-button">Start a ride!</button>
+            <button className="cancel-button" onClick={handleCancel}>Cancel</button>
           </div>
-          <button className="cancel-button" onClick={handleCancel}>Cancel</button>
-        </div>
       )}
     </div>
   );
