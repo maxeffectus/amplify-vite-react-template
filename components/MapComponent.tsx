@@ -158,7 +158,7 @@ const MapComponent: React.FC = () => {
           {selectedObject && (
             <div className="drawer-content">
               <div className="drawer-header">
-                <h3 className="dialog-title">#{selectedObject.id}</h3>
+                <h3 className="dialog-title">#{selectedObject.id * 123}</h3>
                 <img src="/bike-icon.svg" alt="Bike Icon" className="bike-icon-large" />
               </div>
               <p>{selectedObject.address}</p>
