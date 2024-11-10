@@ -297,7 +297,8 @@ html, body, #root {
 
 .scan-qr-button,
 .cancel-button {
-  width: 100%;
+  width: calc(100% - 40px); /* Устанавливаем ширину кнопки, чтобы совпадала с текстом */
+  max-width: 360px;
   padding: 12px;
   font-size: 18px;
   font-weight: bold;
