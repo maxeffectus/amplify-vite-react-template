@@ -153,38 +153,40 @@ const MapComponent: React.FC = () => {
       </MapContainer>
 
       {/* Шторка с информацией об объекте и кнопкой Reserve */}
-      <div className={`drawer ${selectedObject ? 'open' : ''}`}>
-        {selectedObject && (
-          <div className="drawer-content">
-            <div className="drawer-header">
-              <h3 className="dialog-title">#{selectedObject.id}</h3>
-              <img src="/bike-icon.svg" alt="Bike Icon" className="bike-icon-large" />
-            </div>
-            <p>{selectedObject.address}</p>
+      {!isRateInfoVisible && (
+        <div className={`drawer ${selectedObject ? 'open' : ''}`}>
+          {selectedObject && (
+            <div className="drawer-content">
+              <div className="drawer-header">
+                <h3 className="dialog-title">#{selectedObject.id}</h3>
+                <img src="/bike-icon.svg" alt="Bike Icon" className="bike-icon-large" />
+              </div>
+              <p>{selectedObject.address}</p>
 
-            {timeLeft === null && !reservationTimedOut ? (
-              // Шаг 1: Кнопка для резервирования
-              <>
-                <button className="reserve-button" onClick={handleReserveClick}>Reserve</button>
-                <button className="cancel-button" onClick={handleCancel}>Cancel</button>
-              </>
-            ) : reservationTimedOut ? (
-              // Тайм-аут резервирования
-              <>
-                <h3>Reservation timed out</h3>
-                <button className="cancel-button" onClick={handleCancel}>Cancel</button>
-              </>
-            ) : (
-              // Таймер и кнопка Rent
-              <>
-                <h3>Booked for {formatTime(timeLeft)}</h3>
-                <button className="rent-button" onClick={handleRentClick}>Rent</button>
-                <button className="cancel-button" onClick={handleCancel}>Cancel</button>
-              </>
-            )}
-          </div>
-        )}
-      </div>
+              {timeLeft === null && !reservationTimedOut ? (
+                // Шаг 1: Кнопка для резервирования
+                <>
+                  <button className="reserve-button" onClick={handleReserveClick}>Reserve</button>
+                  <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                </>
+              ) : reservationTimedOut ? (
+                // Тайм-аут резервирования
+                <>
+                  <h3>Reservation timed out</h3>
+                  <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                </>
+              ) : (
+                // Таймер и кнопка Rent
+                <>
+                  <h3>Booked for {formatTime(timeLeft)}</h3>
+                  <button className="rent-button" onClick={handleRentClick}>Rent</button>
+                  <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Экран QR */}
       {isQRScreenVisible && (
