@@ -1,14 +1,26 @@
 /* src/components/MapComponent.css */
 
-.map-container {
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.map-component {
   height: 100vh;
   width: 100vw;
   position: relative;
 }
 
+.map-container {
+  height: 100%;
+  width: 100%;
+}
+
 .drawer {
   position: fixed;
-  bottom: -100%; /* Hidden initially */
+  bottom: -300px;
   left: 0;
   width: 100%;
   background-color: white;
@@ -18,43 +30,288 @@
   border-top-right-radius: 20px;
   display: flex;
   justify-content: center;
-  transition: bottom 0.3s ease-in-out; /* Slide up animation */
+  transition: bottom 0.3s ease-in-out;
+  z-index: 1000;
 }
 
 .drawer.open {
-  bottom: 0; /* Slide up when open */
+  bottom: 0;
 }
 
 .drawer-content {
   max-width: 400px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
 }
 
-.drawer-content h3 {
-  font-size: 20px;
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 15px;
+}
+
+.drawer-header h3 {
+  font-size: 18px;
   font-weight: bold;
-  margin: 0;
   color: #333;
+  margin: 0;
+}
+
+.bike-icon {
+  width: 40px;
+  height: 40px;
+  background-image: url('/bike-icon.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 .drawer-content p {
-  margin: 8px 0;
   font-size: 14px;
   color: #666;
+  margin: 8px 0 20px;
+}
+
+.reserve-button {
+  width: 100%;
+  background-color: #FFD700;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.reserve-button:hover {
+  background-color: #ffc107;
+}
+
+.reserve-button, .rent-button, .cancel-button {
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .reserve-button {
   background-color: #FFD700;
   color: #000;
+}
+
+.rent-button {
+  background-color: #FFD700;
+  color: #000;
+  margin-top: 10px;
+}
+
+.cancel-button {
+  background-color: #d3d3d3;
+  color: #000;
+  margin-top: 10px;
+  width: calc(100% - 40px); /* Устанавливаем ширину кнопки, чтобы совпадала с текстом */
+  max-width: 360px;
   border: none;
   border-radius: 8px;
-  padding: 10px 20px;
+  padding: 12px;
   font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.got-it-button {
+  width: calc(100% - 40px);
+  background-color: #d3d3d3;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
   margin-top: 10px;
 }
 
+.got-it-button:hover {
+  background-color: #bcbcbc;
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Space between text and icons */
+  width: 100%;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 15px;
+}
+
+.drawer-text {
+  flex: 1; /* Take remaining space on the left */
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* Space between custom icon and bike icon */
+}
+
+.custom-icon {
+  width: 20px;
+  height: 20px;
+  background-image: url('/custom-icon.svg'); /* Path to custom checkmark icon */
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.bike-icon {
+  width: 25px;
+  height: 25px;
+  background-image: url('/bike-icon.svg'); /* Path to bike icon */
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.drawer-content {
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 15px;
+  padding-left: 20px; /* Добавляем отступ слева */
+}
+
+.drawer-text {
+  flex: 1;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  text-align: left; /* Выравнивание текста по левому краю */
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.custom-icon {
+  width: 20px;
+  height: 20px;
+  background-image: url('/custom-icon.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.bike-icon {
+  width: 25px;
+  height: 25px;
+  background-image: url('/bike-icon.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.reserve-button,
+.rent-button,
+.got-it-button {
+  width: calc(100% - 40px); /* Устанавливаем ширину кнопки, чтобы совпадала с текстом */
+  max-width: 360px;
+  background-color: #FFD700;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.got-it-button {
+  background-color: #d3d3d3;
+  color: #000;
+}
+
+.got-it-button:hover,
 .reserve-button:hover {
   background-color: #ffc107;
+}
+
+.qr-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75); /* Темный полупрозрачный фон */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.qr-image {
+  width: 100%;
+  height: auto;
+  position: absolute; /* Фиксируем изображение по всей ширине экрана */
+  top: 0;
+  left: 0;
+  z-index: 0; /* Отправляем изображение на задний план */
+}
+
+.qr-buttons {
+  position: absolute;
+  bottom: 50px; /* Отступ от нижней границы экрана */
+  width: 80%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1; /* Кнопки поверх изображения */
+}
+
+.scan-qr-button,
+.cancel-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.scan-qr-button {
+  background-color: #FFD700;
+  color: #000;
+}
+
+.cancel-button {
+  background-color: #ccc;
+  color: #000;
 }
