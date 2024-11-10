@@ -158,7 +158,14 @@ const MapComponent: React.FC = () => {
           {selectedObject && (
             <div className="drawer-content">
               <div className="drawer-header">
-                <h3 className="dialog-title">#{selectedObject.id * 123}</h3>
+                 {timeLeft === null && !reservationTimedOut ? (
+                <h3 className="dialog-title">Bike #{selectedObject.id * 123}</h3>
+                          ) : reservationTimedOut ? (
+                              <h3 className="dialog-title">Reservation timed out</h3>
+                              ) : (
+                     <h3 className="dialog-title">Booked for {formatTime(timeLeft)}</h3>
+                 )}
+
                 <img src="/bike-icon.svg" alt="Bike Icon" className="bike-icon-large" />
               </div>
               <p>{selectedObject.address}</p>
@@ -172,13 +179,11 @@ const MapComponent: React.FC = () => {
               ) : reservationTimedOut ? (
                 // Тайм-аут резервирования
                 <>
-                  <h3>Reservation timed out</h3>
                   <button className="cancel-button" onClick={handleCancel}>Cancel</button>
                 </>
               ) : (
                 // Таймер и кнопка Rent
                 <>
-                  <h3>Booked for {formatTime(timeLeft)}</h3>
                   <button className="rent-button" onClick={handleRentClick}>Scan QR</button>
                   <button className="cancel-button" onClick={handleCancel}>Cancel</button>
                 </>
