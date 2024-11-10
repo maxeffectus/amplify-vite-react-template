@@ -38,11 +38,12 @@ const MapComponent: React.FC = () => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [clickedObjectId, setClickedObjectId] = useState<number | null>(null);
   const [selectedObject, setSelectedObject] = useState<MapObject | null>(null);
-  const [isReserved, setIsReserved] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(0);
-  const [reservationTimedOut, setReservationTimedOut] = useState(false);
-  const [rideMessage, setRideMessage] = useState<string | null>(null);
-  const [isQRScreenVisible, setIsQRScreenVisible] = useState(false); // Состояние для управления видимостью экрана QR
+  const [isQRScreenVisible, setIsQRScreenVisible] = useState(false);
+  const [isRateInfoVisible, setIsRateInfoVisible] = useState(false); // Флаг для отображения тарифов
+  const [timeLeft, setTimeLeft] = useState<number | null>(null); // Состояние для таймера
+  const [reservationTimedOut, setReservationTimedOut] = useState(false); // Флаг для завершения таймера
+
+  const TIMER_DURATION = 5 * 60; // Таймер на 5 минут в секундах
 
   const objects: MapObject[] = [
     { id: 1, position: [44.8125, 20.4633], name: "8 Bikes Available", address: "Hercegovačka 14, Stari Grad, Beograd", bikesAvailable: 8 },
@@ -64,70 +65,57 @@ const MapComponent: React.FC = () => {
     }
   }, []);
 
+  // Запуск таймера при резервировании
   useEffect(() => {
-    if (timeLeft > 0) {
-      const timerId = setInterval(() => {
-        setTimeLeft(timeLeft - 1);
+    if (timeLeft !== null && timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft((prevTime) => (prevTime && prevTime > 0 ? prevTime - 1 : 0));
       }, 1000);
-      return () => clearInterval(timerId);
-    } else if (timeLeft === 0 && isReserved) {
-      setIsReserved(false);
-      setReservationTimedOut(true);
-    }
-  }, [timeLeft, isReserved]);
 
-  const handleIconClick = (obj: MapObject) => {
-    if (clickedObjectId === obj.id) {
-      setClickedObjectId(null);
-      setSelectedObject(null);
-      setIsReserved(false);
-      setTimeLeft(0);
-      setReservationTimedOut(false);
-      setRideMessage(null);
-    } else {
-      setClickedObjectId(obj.id);
-      setSelectedObject(obj);
-      setIsReserved(false);
-      setTimeLeft(0);
-      setReservationTimedOut(false);
-      setRideMessage(null);
+      return () => clearInterval(timer);
+    } else if (timeLeft === 0) {
+      setReservationTimedOut(true); // Тайм-аут завершен
     }
-  };
+  }, [timeLeft]);
 
   const handleReserveClick = () => {
-    setIsReserved(true);
-    setTimeLeft(300);
+    setTimeLeft(TIMER_DURATION); // Запуск таймера на 5 минут
     setReservationTimedOut(false);
-  };
-
-  const handleCancelClick = () => {
-    setIsReserved(false);
-    setTimeLeft(0);
-    setReservationTimedOut(false);
-    setRideMessage(null);
-  };
-
-  const handleGotItClick = () => {
-    setClickedObjectId(null);
-    setSelectedObject(null);
-    setReservationTimedOut(false);
-    setRideMessage(null);
-  };
-
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
 
   const handleRentClick = () => {
-    console.log("Rent button clicked!"); // Отладочный вывод
-    setIsQRScreenVisible(true); // Показать экран QR по нажатию Rent
-    console.log("QR Screen Visible:", isQRScreenVisible); // Проверка состояния
+    setIsQRScreenVisible(true); // Показать экран QR
+    setIsRateInfoVisible(false); // Скрыть тарифы, если они были отображены
   };
 
-  const handleCancelQR = () => {
-    setIsQRScreenVisible(false); // Скрыть экран QR по нажатию Cancel
+  const handleShowRates = () => {
+    setIsQRScreenVisible(false); // Закрыть экран QR
+    setIsRateInfoVisible(true); // Показать информацию о тарифах
+  };
+
+  const handleCancel = () => {
+    // Логика для отмены и возврата на предыдущий шаг
+    setIsRateInfoVisible(false);
+    setIsQRScreenVisible(false);
+    setSelectedObject(null); // Сбросить выбранный объект
+    setTimeLeft(null); // Сбросить таймер
+    setReservationTimedOut(false);
+  };
+
+  const handleIconClick = (obj: MapObject) => {
+    if (!isRateInfoVisible && !reservationTimedOut) {
+      // Запрет выбора других объектов при показе тарифов или тайм-ауте
+      setClickedObjectId(obj.id);
+      setSelectedObject(obj);
+    }
+  };
+
+  // Форматирование оставшегося времени
+  const formatTime = (seconds: number | null): string => {
+    if (seconds === null) return "";
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
   return (
@@ -159,41 +147,40 @@ const MapComponent: React.FC = () => {
               click: () => handleIconClick(obj),
             }}
           >
-            {!isReserved && clickedObjectId !== obj.id && (
-              <Popup>{obj.name}</Popup>
-            )}
+            <Popup>{obj.name}</Popup>
           </Marker>
         ))}
       </MapContainer>
 
+      {/* Шторка с информацией об объекте и кнопкой Reserve */}
       <div className={`drawer ${selectedObject ? 'open' : ''}`}>
         {selectedObject && (
           <div className="drawer-content">
             <div className="drawer-header">
-              <h3 className="drawer-text">
-                {rideMessage
-                  ? rideMessage
-                  : reservationTimedOut
-                  ? "Reservation timed out"
-                  : isReserved
-                  ? `Booked for ${formatTime(timeLeft)}`
-                  : `${selectedObject.bikesAvailable} Bikes Available`}
-              </h3>
-              <div className="icon-container">
-                {isReserved && !reservationTimedOut && <div className="custom-icon"></div>}
-                <div className="bike-icon"></div>
-              </div>
+              <h3 className="dialog-title">#{selectedObject.id}</h3>
+              <img src="/bike-icon.svg" alt="Bike Icon" className="bike-icon-large" />
             </div>
             <p>{selectedObject.address}</p>
-            {reservationTimedOut ? (
-              <button className="got-it-button" onClick={handleGotItClick}>Got It</button>
-            ) : isReserved ? (
+
+            {timeLeft === null && !reservationTimedOut ? (
+              // Шаг 1: Кнопка для резервирования
               <>
-                <button className="rent-button" onClick={handleRentClick}>Rent</button>
-                <button className="cancel-button" onClick={handleCancelClick}>Cancel</button>
+                <button className="reserve-button" onClick={handleReserveClick}>Reserve</button>
+                <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+              </>
+            ) : reservationTimedOut ? (
+              // Тайм-аут резервирования
+              <>
+                <h3>Reservation timed out</h3>
+                <button className="cancel-button" onClick={handleCancel}>Cancel</button>
               </>
             ) : (
-              <button className="reserve-button" onClick={handleReserveClick}>Reserve</button>
+              // Таймер и кнопка Rent
+              <>
+                <h3>Booked for {formatTime(timeLeft)}</h3>
+                <button className="rent-button" onClick={handleRentClick}>Rent</button>
+                <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+              </>
             )}
           </div>
         )}
@@ -201,13 +188,35 @@ const MapComponent: React.FC = () => {
 
       {/* Экран QR */}
       {isQRScreenVisible && (
-          <div className="qr-screen">
-            <img src="/bike_with_qr.png" alt="QR Code Screen" className="qr-image" />
-            <div className="qr-buttons">
-              <button className="scan-qr-button" onClick={() => console.log("Scanning QR...")}>Scan QR</button>
-              <button className="cancel-button" onClick={handleCancelQR}>Cancel</button>
+        <div className="qr-screen">
+          <img src="/bike_with_qr.png" alt="QR Code Screen" className="qr-image" />
+          <div className="qr-buttons">
+            <button className="scan-qr-button" onClick={handleShowRates}>Rent</button>
+            <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {/* Информация о тарифах */}
+      {isRateInfoVisible && (
+        <div className="rate-dialog">
+          <h3>Select Rate</h3>
+          <div className="rate-options">
+            <div className="rate-option selected">
+              <span>Pay per minute</span>
+              <span>$0.05 ≈ 0.0097 TON</span>
+            </div>
+            <div className="rate-option">
+              <span>Pay per hour</span>
+              <span>$1.00 ≈ 0.1951 TON</span>
+            </div>
+            <div className="rate-option">
+              <span>Pay per day</span>
+              <span>$10 ≈ 1.9515 TON</span>
             </div>
           </div>
+          <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+        </div>
       )}
     </div>
   );
